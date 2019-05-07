@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<form id="userForm">
+    <div name="adds">
+        <input type="hidden"   name="userid"  th:value="${user?.userid}">
+        <div class="form-group">
+            <label for="proName">用户名称</label>
+            <input type="text" class="form-control" th:value="${user?.username}"  name="username"  id="proName" placeholder="名称">
+        </div>
+        <br>
+        <div class="form-group">
+            <label >用户密码</label>
+            <input type="text" name="userpass" th:value="${user?.userpass}" class="form-control" placeholder="密码" />
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="useregentime">用户创建日期</label>
+            <input class="form-control" id="useregentime" name="useregentime" th:value="${user?.useregentime}" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+        </div>
+        <br>
+        <div class="form-group">
+            <label >用户电话</label><br>
+            <input type="text" name="usermobile" th:value="${user?.usermobile}" class="form-control" placeholder="用户电话" />
+
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="userImgId"> 项目图片</label>
+            <input type="file" name="userImg" id="g_ImgId"  class="form-control" >
+
+            <input type="hidden" name="userurl" id="userImgId"  th:value="${user?.userurl}" >
+        </div><br>
+        <div class="form-group">
+            <label >用户邮箱</label>
+            <input type="text" name="useremail" th:value="${user?.useremail}" class="form-control" placeholder="邮箱" />
+        </div>
+
+
+    </div>
+</form>
+
+<script type="text/javascript">
+
+    $(function(){
+
+        $("#g_ImgId").fileinput({
+            //上传按钮
+            showUpload:true,
+            //移除按钮
+            showRemove : true,
+            //最大上传文件的个数，想要多选文件，input文件域必须加上multiple这个属性
+            // maxFileCount:2,
+            //主样式
+            mainClass: "input-group-lg",
+            //按钮样式
+            browseClass: "btn btn-primary btn-block",
+            //语言设置：中文
+            language : 'zh',
+            //允许预览的文件类型
+            allowedPreviewTypes : [ 'image', 'text' ],
+            //允许选择的文件后缀名
+            allowedFileExtensions : [ 'jpg', 'png', 'gif'],
+            //最大上传文件的大小（KB）
+            maxFileSize : 200000,
+            //是否显示路径文本框
+            showCaption:true,
+            //是否显示预览
+            showPreview:true,
+            //是否显示关闭预览框
+            showClose:false,
+            //是否显示文件选择按钮
+            showBrowse:true,
+
+
+
+            //文件上传的路径，设置可实现拖拽
+            uploadUrl :'/imgUpload',
+            validateInitialCount:true,
+            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+            msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+        });
+
+        //fileuploaded 上传文件之后的方法
+        $('#g_ImgId').on('fileuploaded', function(event, data, previewId, index) {
+
+            alert(data.response.imgId);
+            //console.info(data.response.imgId);
+            //图片主键回显到隐藏域
+            $("#userImgId").val(data.response.imgId);
+
+        });
+
+
+    })
+
+
+</script>

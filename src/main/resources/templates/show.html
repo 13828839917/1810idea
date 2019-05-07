@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="/js/jquery-1.8.0.js"></script>
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.7.0/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.7.0/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.7.0/demo.css">
+    <script type="text/javascript" src="/js/easyui-1.7.0/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/easyui-1.7.0/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui-1.7.0/plugins/jquery.datagrid.js"></script>
+    <link rel="stylesheet" href="/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <script type="text/javascript" src="/ztree/js/jquery.ztree.core.min.js"></script>
+    <script type="text/javascript" src="/ztree/js/jquery.ztree.exedit.js"></script>
+    <script type="text/javascript" src="/ztree/js/jquery.ztree.excheck.min.js"></script>
+
+    <!-- uploadify -->
+    <script src="/js/uploadify/jquery.uploadify.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/js/uploadify/uploadify.css" />
+
+
+
+    <!-- 编辑器 -->
+    <link rel="stylesheet" href="/js/kindeditor/themes/default/default.css" />
+    <link rel="stylesheet" href="/js/kindeditor/plugins/code/prettify.css" />
+    <script charset="utf-8" src="/js/kindeditor/kindeditor-all.js"></script>
+    <script charset="utf-8" src="/js/kindeditor/lang/zh-CN.js"></script>
+    <script charset="utf-8" src="/js/kindeditor/plugins/code/prettify.js"></script>
+
+    <!-- my97 -->
+
+    <link rel="stylesheet" href="/js/my97/skin/WdatePicker.css">
+    <script src="/js/my97/WdatePicker.js"></script>
+    <!-- uploadify -->
+    <script src="/js/uploadify/jquery.uploadify.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/js/uploadify/uploadify.css" />
+
+    <!-- 引入bootstrap的css -->
+    <link  href="/js/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <!-- 引入bootstrap-treeview的css -->
+    <link  href="/js/treeview/bootstrap-treeview.min.css" rel="stylesheet" >
+    <!-- 引入bootstrap-addTabs的css -->
+    <link  href="/js/addTabs/addTabs.css" rel="stylesheet" >
+    <!-- 引入bootstrap-table的css -->
+    <link  href="/js/table/bootstrap-table.min.css" rel="stylesheet" >
+    <!-- 引入fileinput的css -->
+    <link type="text/css" rel="stylesheet" href="/js/fileinput/css/fileinput.min.css" />
+
+    <!-- 引入bootstrap的js-->
+    <script type="text/javascript" src="/js/bootstrap/js/bootstrap.min.js"></script>
+    <!-- 引入bootstrap的js-->
+    <script type="text/javascript" src="/js/treeview/bootstrap-treeview.min.js"></script>
+    <!-- 引入bootstrap的js-->
+    <script type="text/javascript" src="/js/addTabs/addTabs.js"></script>
+    <!-- 引入bootstrap-table的js-->
+    <script type="text/javascript" src="/js/table/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="/js/table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <!-- 引入bootbox.js -->
+    <script type="text/javascript" src="/js/bootbox/bootbox.js"></script>
+    <!-- 引入fileinput的js -->
+    <script type="text/javascript" src="/js/fileinput/js/fileinput.min.js"></script>
+    <!--  引入fileinput的js -->
+    <script type="text/javascript" src="/js/fileinput/js/locales/zh.js"></script>
+
+    <script type="text/javascript" src="/js/fileinput/themes/fa/theme.js"></script>
+
+</head>
+<body>
+<form id="pro_from" class="form-inline">
+
+    <div  class="form-group">
+        <label for="username"  >用户名字
+        </label>
+        <input type="text" class="form-control" id="username" placeholer="名称">
+    </div>
+
+
+
+
+
+
+    <button type="button" class="btn btn-success" onclick="search()">搜索</button>
+    <button type="button" class="btn btn-primary" onclick="reset()">重置</button>
+
+
+
+</form>
+<button type="button" class="btn btn-info btn-lg" onclick="editTable()">修改</button>
+<button type="button" class="btn btn-info btn-md" onclick="add()">增加</button>
+<button type="button" class="btn btn-info btn-md" onclick="addsPj()">批量增加</button>
+<button type="button" class="btn btn-info btn-md" onclick="deletePj()">删除</button>
+
+<table id="bootTab"></table>
+
+</body>
+<script type="text/javascript">
+
+
+
+    $(function (){
+
+        $("#bootTab").bootstrapTable({
+            url:"/findUser",
+            method:"post",
+            striped: true,  	// 斑马线效果     默认false
+            //只允许选中一行
+            singleSelect:true,
+            //选中行是不选中复选框或者单选按钮
+            clickToSelect:true,
+            showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            uniqueId: "userid",                 //每一行的唯一标识，一般为主键列
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,     //  最少留两列
+            detailView: false,                  //是否显示父子表
+            //发送到服务器的数据编码类型
+            contentType:'application/x-www-form-urlencoded;charset=UTF-8',   //数据编码纯文本  offset=0&limit=5
+            toolbar:'#tabToolBar',   //  工具定义位置
+            columns:[     //  列属性     因为 他们可以合并单元格
+
+                {field:'userid',title:"Id",width:200,
+                    formatter: function(value,row,index){   //  格式化  当前单元格内容
+                        return "<input type='checkbox' value="+value+" name='chk'/>"; }
+                },
+                {field:'username',title:'用户名称',width:200},      //  列    field   代表是 后台  传过来的值
+                {field:'userpass',title:'用户密码',width:200},
+                {field:'useregentime',title:'创建时间',width:220,
+                   /* formatter: function (value,row,index){
+                        var simfomat = new Date();
+                        simfomat.setTime(value);   //转换时间
+                        return  simfomat.toLocaleDateString();
+                    }*/
+                },
+                {field:'usermobile',title:'用户电话',width:200,
+                    /*  formatter: function (value,row,index){
+                         var simfomat = new Date();
+                          simfomat.setTime(value);   //转换时间
+                          return  simfomat.toLocaleDateString();
+                  } */}
+                ,
+                {field:'useremail',title:"用户邮箱",width:200},
+
+                {field:'userurl',title:'用户头像',width:200,
+                    formatter: function (value,row,index){
+
+                        return "<img  width='80' height='80'  src='findImgById?imgId="+row.userurl+"' />" ;
+                    }}
+                , {field:'crud',title:'修改',width:100,
+                    formatter: function (value,row,index){
+
+
+                        return "<a href='javascript:dialog(&quot;<%=request.getContextPath()%>/project/findBootDialogById.do?id="+row.pjId+"&quot;,&quot;<%=request.getContextPath()%>/project/saveMongo.do&quot;,&quot;修改&quot;)'>修改</a>";
+                    }
+                }
+            ],
+            //传递参数（*）
+            queryParams: function(params) {
+                var whereParams = {
+                    /*
+                        分页  自定义的参数         默认传 limit（展示几条）    offset（从第几条开始    起始条数）
+                    */
+                    "pageSize":params.limit,
+                    "start":params.offset,
+                    "username":params.search,//搜索产品名称
+                    "username":$("#username").val(),
+
+                }
+                return whereParams;
+            },
+            //前台--排序字段
+            //sortName:'proPrice',
+            //sortOrder:'desc',
+            //前台--搜索框
+            search:true,
+            //启动回车键做搜索功能
+            searchOnEnterKey:true,
+            //分页方式   后台请求的分页方式
+            sidePagination:'server',
+            pagination: true,                   //是否显示分页（*）
+            pageNum: 1,                       //每页的记录行数（*）
+            pageSize: 3,                       //每页的记录行数（*）
+            pageList: [3, 6, 9,12],        //可供选择的每页的行数（*）
+        });
+    })
+
+    function  search(){    //refresh     - 可以设置{query:{foo:’bar’}}增加特定的参数
+        $("#bootTab").bootstrapTable("refresh",{
+            "query":{
+                "username":$("#username").val(),
+
+            }
+        });
+
+    }
+
+    function editTable(){
+        var chk=$("[name='chk']:checked");
+        alert(chk);
+        if(chk&&chk.length==1){
+            dialog("/findBootDialogById?id="+chk[0].value,"saveOrUpdate","修改");
+        }else{
+            alert("请选择一个修改");
+        }
+    }
+
+
+    /*
+    *发送ajax请求获取jsp页面内容
+    */
+    function getJspHtml(urlStr){
+        var  jspHtml = "";
+//		 async  (默认: true) 默认设置下，所有请求均为异步请求。如果需要发送同步请求，请将此选项设置为 false。
+        //注意，同步请求将锁住浏览器，用户其它操作必须等待请求完成才可以执行。
+        $.ajax({
+            url:urlStr,
+            type:'post',
+            //同步的ajax
+            async:false,
+            success:function(data){
+                //alert(data);//data--addProduct.jsp页面内容
+                jspHtml = data; //进后台返回一个页面   页面要修改的内容显示
+            },
+            error:function(){
+                bootbox.alert("ajax失败");
+            }
+        });
+        return jspHtml;
+    }
+
+    function  dialog(HTMLurl,submitUrl,title){
+
+        var dialog = bootbox.dialog({
+            title: title,
+            message: getJspHtml(HTMLurl),   //调用方法  加载方法返回的页面
+            buttons:{
+                "save":{
+                    label: '保存',
+                    //自定义样式
+                    className: "btn-success",
+                    callback: function() {
+
+                        // $("#infoId").val(editor1.html())  单个新增放开注释
+                        $.ajax({
+                            url:submitUrl,
+                            type:'post',
+                            data:$("#userForm").serialize(),
+                            success:function(data){
+                                bootbox.alert("保存成功");
+                                //刷新服务端的数据：
+                                search();
+                                $("#bootTab").bootstrapTable('refresh');
+
+                            },
+                            error:function(){
+                                bootbox.alert("ajax失败");
+                            }
+                        });
+                    }
+                },
+                "unSave":{
+                    label: '取消',
+                    //自定义样式
+                    className: "btn-info",
+                    callback: function() {
+                        // return false;  //dialog不关闭
+                    }
+                }
+            }
+        });
+    }
+
+    function add(){
+
+
+        dialog("/findBootDialogById?id=''+","/saveOrUpdate","修改");
+
+
+
+
+    }
+
+    function deletePj(){
+
+
+        var chk=$("[name='chk']:checked");
+        var strId = "";
+
+
+        if(chk&&chk.length>0){
+            for(var i =0; i<chk.length;i++){
+
+                strId += chk[i].value+ ",";
+            }
+
+
+            strId = strId.substring(0,strId.length-1);
+            //调用删除的方法
+            deleteAll(strId);
+
+        }else{
+            alert("请至少选择一个删除");
+        }
+
+
+
+
+
+
+
+
+    }
+
+
+    function deleteAll(strId){
+        $.ajax({
+            url:"/deleteAll",
+            data:{id:strId},
+            type:"post",
+            success: function(){
+                $("#bootTab").bootstrapTable('refresh');
+
+            },error:function(){
+
+                alert("删除失败！");
+            }
+
+
+
+        })
+
+    }
+
+    function addsPj(){
+        dialog("<%=request.getContextPath()%>/addsDialog.jsp","<%=request.getContextPath()%>/project/saveListMongo.do","批量新增");
+
+
+
+    }
+
+</script>
+</html>

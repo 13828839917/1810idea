@@ -1,0 +1,33 @@
+
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://192.168.109.131:27017/mydb
+  profiles:
+    active: dev
+  datasource:
+    name: mydb
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/user
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+  application:
+    name: servername
+  dubbo:
+    application:
+      name: tree_consumer
+    registry:
+      address: zookeeper://127.0.0.1:2181
+    scan: com.jk.service
+
+mybatis:
+  mapperLocations: classpath*:mybatis/mapper-*.xml
+  typeAliasesPackage: com.jk.bean
+ #spring.dubbo.application.name=consumer
+ #spring.dubbo.registry.address=zookeeper://127.0.0.1:2181
+ #spring.dubbo.scan=com.jaycekon.dubbo.service
+
+server:
+  port: 8088
